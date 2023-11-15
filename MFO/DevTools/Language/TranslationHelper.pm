@@ -60,7 +60,8 @@ sub new {
 #     7. Sets the TranslationHelper ($self) into the default Language object to identify missing translations.
 #
 # Example:
-#     $self->init('MyPackage'); # Initializes the TranslationHelper to identify missing translations for 'MyPackage'.
+#     $self->init('MyPackage'); # Initializes the TranslationHelper to identify missing translations for 
+#    'MyPackage', which will be expanded to de_MyPackage, en_MyPackage, etc. depending on the user's language.
 #
 # Note:
 #     - This function is designed to identify missing translations for the supplied packages only, ignoring
