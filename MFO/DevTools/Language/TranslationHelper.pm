@@ -485,6 +485,8 @@ END_OF_FILE
     close $fh;
 }
 
+sub dump {}
+
 # sub dump {
 #     my $self = shift;
 #     my $dumper = $self->{dumper} ||= $Kernel::OM->Get('MFO::Log::Dumper');
