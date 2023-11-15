@@ -1,6 +1,6 @@
 # TranslationHelper for Znuny/Otobo
 
-The TranslationHelper is a utility module for Znuny that aids in managing translations of Znuny modules. It is designed to help identify missing translations for specific packages, making the translation process more efficient and ensuring consistency.
+The TranslationHelper is a utility module for Znuny developers that aids in managing translations of Znuny modules. It is designed to help identify missing translations for specific packages, making the translation process more efficient and ensuring consistency.
 
 ## License
 
