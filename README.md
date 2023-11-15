@@ -15,7 +15,7 @@ The project is distributed under the GNU General Public License (GPL v3).
 - Automatically creates or modifies translation files for modules.
 - Supports an exclusion list to prevent unwanted translation suggestions.
 - Logs missing translations during development for comprehensive testing.
-- Lightweight and non-intrusive, does not affect Znuny's standard behavior when not in use.
+- Lightweight and non-intrusive, does not affect Znuny/Otobo's standard behavior when not in use.
 
 ## Getting Started
 
