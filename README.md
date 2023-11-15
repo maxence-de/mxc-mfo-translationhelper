@@ -75,7 +75,7 @@ Self->{Translation} = {
         "Enable phone number checking." => "Telefonnummernprüfung aktivieren.",
     };
 ```
-Simply copy the output from the TranslationHelper section to the translation list below, translate the terms and remove the comment.
+Move the the output from the TranslationHelper section to the translation list below, translate the terms and remove the comment.
 
 ## Note
 
