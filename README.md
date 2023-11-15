@@ -21,7 +21,7 @@ The project is distributed under the GNU General Public License (GPL v3).
 
 To use the TranslationHelper, follow these steps:
 
-1.  Clone the repository to your workspace directory and link the module to your development environment framework.
+1.  Clone the repository to your workspace directory, link the module to your development framework and do a rebuild.
 Alternatively, download the opm file from the mxcPackages directory and install it using the Znuny/Otobo package manager.
 
 2. Initialize the TranslationHelper in your frontend module:
