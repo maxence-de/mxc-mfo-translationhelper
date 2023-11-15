@@ -54,6 +54,7 @@ The `$exclude` parameter allows you to specify terms that should be excluded fro
 ## Operation
 
 The TranslationHelper will log missing translations during development. You have to click through all the screens of your module to ensure that all translations are logged. The TranslationHelper will not log translations for screens and screen features that are not visited during the test. Do not forget error messages and other messages that are usually not displayed on the screen.
+
 ## Output
 
 The TranslationHelper will modify the language module of the first package of the supplied packages. If the module does not exist, it will be created. The TranslationHelper will not modify any other language modules.
