@@ -30,7 +30,7 @@ Alternatively, download the opm file from the mxcPackages directory and install 
 
    sub new {
        my ( $class, %param ) = @_;
-       my $self = $class->SUPER::new(%param);
+       my $self = bless { %param }, $class;
 
        my $translationHelper = $Kernel::OM->Get('MFO::DevTools::Language::TranslationHelper');
        my $exclude = [
