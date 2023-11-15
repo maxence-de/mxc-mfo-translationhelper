@@ -48,6 +48,11 @@ To use the TranslationHelper, follow these steps:
 
 The `$exclude` parameter allows you to specify terms that should be excluded from translation suggestions by the TranslationHelper. This is useful for avoiding unnecessary suggestions for terms that are either part of Znuny's core or already being translated in other modules. You can add terms to the exclusion list as needed.
 
+## Operation
+
+The TranslationHelper will log missing translations during development. You have to click through all the screens of your module to ensure that all translations are logged. The TranslationHelper will not log translations for screens and screen features that are not visited during the test. Do not forget error messages and other messages that are usually not displayed on the screen.
+```perl
+
 ## Output
 
 The TranslationHelper will modify the language module of the first package of the supplied packages. If the module does not exist, it will be created. The TranslationHelper will not modify any other language modules.
