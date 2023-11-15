@@ -8,8 +8,6 @@
 
 use Kernel::Language;
 
-print STDERR "Loading TranslationHelper\n";
-
 BEGIN {
     #---------------------------------------------------------------------------------------------------------
     # Monkey Patch for Kernel::Language::Translate
