@@ -202,7 +202,7 @@ sub checkTranslation {
 
     if (! grep { $_ eq $text } @{$self->{lines}}) {
         push @{$self->{lines}}, $text;
-        $self->replace_lines_between_markers($file, $self->{lines});
+        $self->replaceLinesBetweenMarkers($file, $self->{lines});
     }
 }
 
