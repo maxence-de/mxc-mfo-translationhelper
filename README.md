@@ -48,6 +48,34 @@ To use the TranslationHelper, follow these steps:
 
 The `$exclude` parameter allows you to specify terms that should be excluded from translation suggestions by the TranslationHelper. This is useful for avoiding unnecessary suggestions for terms that are either part of Znuny's core or already being translated in other modules. You can add terms to the exclusion list as needed.
 
+## Output
+
+The TranslationHelper will modify the language module of the first package of the supplied packages. If the module does not exist, it will be created. The TranslationHelper will not modify any other language modules.
+Sample output:
+```
+Self->{Translation} = {
+
+        # $$ START TranslationHelper $$
+        # 'Change System Phone Number' => 'Change System Phone Number'
+        # 'Change System Phone Number' => 'Change System Phone Number'
+        # 'Enter Phone Number' => 'Enter Phone Number'
+        # 'Select the validity of the phone number.' => 'Select the validity of the phone number.'
+        # 'Enter Comment' => 'Enter Comment'
+        # 'Enter a comment.' => 'Enter a comment.'
+        # $$ END TranslationHelper $$
+
+        %{$Self->{Translation}},
+        # AdminSystemPhoneNumber.tt
+        "System Phone Number Management" => "Verwaltung von System-Telefonnummern",
+        "Add System Phone Number" => "System-Telefonnummer hinzufügen",
+        "Edit System Phone Number" => "System-Telefonnummer bearbeiten",
+        "This field is required and needs to be a valid phone number." => "Dieses Feld ist erforderlich und muss eine gültige Telefonnummer sein.",
+        "This phone number cannot be set to invalid, because it is used in one or more queue(s) or auto response(s)." => "Diese Telefonnummer kann nicht auf ungültig gesetzt werden, da sie in einer oder mehreren Queue(s) oder Auto Response(s) verwendet wird.",
+        "Enable phone number checking." => "Telefonnummernprüfung aktivieren.",
+    };
+```
+
+
 ## Note
 
 1. The TranslationHelper is a developer tool and should not affect the end-user experience.
