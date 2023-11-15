@@ -52,7 +52,8 @@ The `$exclude` parameter allows you to specify terms that should be excluded fro
 
 The TranslationHelper will modify the language module of the first package of the supplied packages. If the module does not exist, it will be created. The TranslationHelper will not modify any other language modules.
 Sample output:
-```
+```perl
+
 Self->{Translation} = {
 
         # $$ START TranslationHelper $$
@@ -74,7 +75,7 @@ Self->{Translation} = {
         "Enable phone number checking." => "Telefonnummernprüfung aktivieren.",
     };
 ```
-
+Simply copy the output from the TranslationHelper section to the translation list below, translate the terms and remove the comment.
 
 ## Note
 
