@@ -23,7 +23,7 @@ To use the TranslationHelper, follow these steps:
 
 1. Clone the repository to your Znuny installation.
 
-2. Initialize the TranslationHelper in your module:
+2. Initialize the TranslationHelper in your frontend module:
    ```perl
    use MFO::DevTools::Language::TranslationHelper;
 
@@ -37,8 +37,10 @@ To use the TranslationHelper, follow these steps:
            'Delete all',
            # ... Add more exclusions as needed
        ];
-
-       $translationHelper->init('YourModule', $exclude);
+      
+       # 'YourModule' is the name of your language module. Will be exanded to 'de_YourModule.pm' or 
+       # 'en_YourModule.pm' depending on the currently set language.
+       $translationHelper->init('YourModule', $exclude); 
        # ...
    }
 3. Test your module while the TranslationHelper is active to log missing translations.
@@ -86,6 +88,7 @@ Move the the output from the TranslationHelper section to the translation list b
 2. Ensure that your module's translation file follows the naming convention based on the currently set language (e.g., de_YourModule.pm).
 3. This tool is most effective when used during module development to catch missing translations early.
 4. The TranslationHelper is not a replacement for the translation process. It is designed to aid in the translation process by identifying missing translations and suggesting translations for them. It is currently not intended to be used as a translation tool.
+5. See mxcPackages directory for opm files.
 5. Look into the source code for detailled documentation.
 
 ## Feedback
