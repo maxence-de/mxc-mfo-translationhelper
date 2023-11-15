@@ -49,7 +49,7 @@ Alternatively, download the opm file from the mxcPackages directory and install 
 
 ## Exclusion List
 
-The `$exclude` parameter allows you to specify terms that should be excluded from translation suggestions by the TranslationHelper. This is useful for avoiding unnecessary suggestions for terms that are either part of Znuny's core or already being translated in other modules. You can add terms to the exclusion list as needed.
+The `$exclude` parameter allows you to specify terms that should be excluded from translation suggestions by the TranslationHelper. This is useful for avoiding unnecessary suggestions for terms that are either part of Znuny's few untranslated core strings or core strings, where Translate was called more than once. You can add terms to the exclusion list as needed.
 
 ## Operation
 
