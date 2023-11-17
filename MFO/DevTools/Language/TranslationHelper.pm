@@ -2,7 +2,7 @@
 # Copyright (C) 2023 maxence business consulting gmbh
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
-# the enclosed file COPYING for license information (GPL). If you
+# the enclosed file LICENSE for license information (GPL-3). If you
 # did not receive this file, see https://www.gnu.org/licenses/gpl-3.0.txt.
 # --
 package MFO::DevTools::Language::TranslationHelper;
