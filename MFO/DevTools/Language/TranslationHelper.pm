@@ -17,8 +17,6 @@ our $VERSION = '1.0.0';
 our @ObjectDependencies = (
     'Kernel::Config',
     'Kernel::Language',
-    'Kernel::System::Log',
-    'Kernel::System::Main',
 );
 
 sub new {
@@ -26,10 +24,7 @@ sub new {
 
     my $self = bless {}, $class;
 
-    my $config = $Kernel::OM->Get('Kernel::Config');
-    $self->{home} = $config->Get('Home') . '/';
-
-    $self->{main} = $Kernel::OM->Get('Kernel::System::Main');
+    $self->{home} = $Kernel::OM->Get('Kernel::Config')->{Home} . '/';
     $self->{language} = $Kernel::OM->Get('Kernel::Language');
 
     return $self;
@@ -104,8 +99,6 @@ sub init {
         push @packages, 'Kernel::Language::' . $userLanguage . '_' . $package;
     }
 
-    my $log = $Kernel::OM->Get('Kernel::System::Log');
-
     my $first = 1;
     for my $package (@packages) {
         if ( length $userLanguage == 2 ) {
@@ -161,11 +154,10 @@ sub requireLanguagePackage {
         $self->{file} = $self->{home} . $file . '.pm';
     }
 
-    # we do not use Main::Require() here, because we want to catch the error
+    # try to load the package and return if it fails
     my $file = $package =~ s{::}{/}smxgr;
     $file = $file . '.pm';
     eval { require $file; };
-
     return if $@;
 
     # replace the file name with the real one
