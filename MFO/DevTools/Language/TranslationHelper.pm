@@ -118,7 +118,8 @@ sub init {
 #---------------------------------------------------------------------------------------------------------
 # requireLanguagePackage()
 #
-# Loads and initializes a language package, optionally storing the file name of the first package loaded.
+# Loads and initializes a language package, optionally storing the file name and the package name of the 
+# first package loaded.
 #
 #     $Self->requireLanguagePackage($package, $first);
 #
@@ -139,7 +140,7 @@ sub init {
 #     2. If the 'require' operation fails (e.g., package not found), it will catch the error and return
 #        without raising an exception.
 #     3. It checks if the loaded package has a 'Data' method and applies it if available.
-#     4. The file name of the first loaded package can be stored if the '$first' flag is set to true.
+#     4. The file name of the loaded package will be stored if the '$init' flag is set to true.
 #---------------------------------------------------------------------------------------------------------
 sub requireLanguagePackage {
     my ($self, $package, $init) = @_;
