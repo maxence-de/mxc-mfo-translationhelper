@@ -88,10 +88,11 @@ Move the the output from the TranslationHelper section to the translation list b
 
 1. The TranslationHelper is a developer tool and should not affect the end-user experience.
 2. Ensure that your module's translation file follows the naming convention based on the currently set language (e.g., de_YourModule.pm).
-3. This tool is most effective when used during module development to catch missing translations early.
-4. The TranslationHelper is not a replacement for the translation process. It is designed to aid in the translation process by identifying missing translations and suggesting translations for them. It is currently not intended to be used as a translation tool.
-5. See mxcPackages directory for opm files.
-5. Look into the source code for detailled documentation.
+3. The TranslationHelper will create the translation file if it does not exist.
+4. This tool is most effective when used during module development to catch missing translations early.
+5. The TranslationHelper is not a replacement for the translation process. It is designed to aid in the translation process by identifying missing translations and suggesting translations for them. It is currently not intended to be used as a translation tool.
+6. See mxcPackages directory for opm files.
+7. Look into the source code for detailled documentation.
 
 ## Feedback
 

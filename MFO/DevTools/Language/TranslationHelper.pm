@@ -226,7 +226,7 @@ sub checkTranslation {
     
     $self->getLines($package, $file) unless $self->{lines};
 
-    $text = '        # \'' . $text . '\' => \'' . $text . '\'';
+    $text = '        # \'' . $text . '\' => \'' . $text . '\',';
 
     if (! grep { $_ eq $text } @{$self->{lines}}) {
         push @{$self->{lines}}, $text;
