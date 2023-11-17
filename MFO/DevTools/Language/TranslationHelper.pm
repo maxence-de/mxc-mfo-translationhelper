@@ -10,6 +10,8 @@ package MFO::DevTools::Language::TranslationHelper;
 use strict;
 use warnings;
 
+use File::Basename;
+
 our $VERSION = '1.0.0';
 
 our @ObjectDependencies = (
@@ -26,10 +28,9 @@ sub new {
 
     my $config = $Kernel::OM->Get('Kernel::Config');
     $self->{home} = $config->Get('Home') . '/';
-    
-    my $language = $Kernel::OM->Get('Kernel::Language');
-    $self->{UserLanguage} = $language->{UserLanguage};
-    $self->{language} = $language;
+
+    $self->{main} = $Kernel::OM->Get('Kernel::System::Main');
+    $self->{language} = $Kernel::OM->Get('Kernel::Language');
 
     return $self;
 }
@@ -91,60 +92,91 @@ sub init {
     };
     $self->{exclude} = $exclude;
 
-    # load the Kernel translation file
-    my $main = $Kernel::OM->Get('Kernel::System::Main');
-    my $languageFile = "Kernel::Language::$self->{UserLanguage}";
+    my $userLanguage = $self->{language}{UserLanguage};
 
-    # no need to check if the file exists, because Kernel::Language already did that
-    $main->Require($languageFile);
-    my $dataMethod = $languageFile->can('Data');
-    $dataMethod->($self);
+    # load the Kernel translation file
+    my $systemLanguagePackage = "Kernel::Language::$userLanguage";
+    $self->requireLanguagePackage($systemLanguagePackage);
 
     # create the package class references for the translation files
     my @packages;
-    foreach my $pckg (@{$package}) {
-        my $paket = {
-            file => $self->{home} . "Kernel/Language/$self->{UserLanguage}_$pckg.pm",
-            package => 'Kernel::Language::' . $self->{UserLanguage} . '_' . $pckg,
-        };
-        push @packages, $paket;
+    foreach my $package (@{$package}) {
+        push @packages, 'Kernel::Language::' . $userLanguage . '_' . $package;
     }
-    $self->{packages} = \@packages;
-    $self->dump('packages', \@packages);
 
     my $log = $Kernel::OM->Get('Kernel::System::Log');
 
-    for my $pckg (@packages) {
-        my $file = $pckg->{file};
-        next if !-f $file;
-        
-        my $package = $pckg->{package};
-
-        $self->dump('pckg', $pckg);
-
-        if ( length $self->{UserLanguage} == 2 ) {
+    my $first = 1;
+    for my $package (@packages) {
+        if ( length $userLanguage == 2 ) {
             next if $package =~ /^Kernel::Language::[a-z]{2}_[A-Z]{2}$/;    # en_GB
             next if $package =~ /^Kernel::Language::[a-z]{2}_[A-Z]{2}_/;    # en_GB_ITSM*
         }
 
-        if ( !$main->Require($package) ) {
-            $log->Log( Priority => 'error', Message  => "Failed to load $package!" );
-            next FILE;
-        }
-
-        my $dataMethod = $package->can('Data');
-
-        if ( !$dataMethod ) {
-            $log->Log( Priority => 'error', Message  => "Failed to load $package! 'Data' method not found." );
-            next FILE;
-        }
-        
-        # apply package translation
-        eval { $dataMethod->($self) };
+        $self->requireLanguagePackage($package, $first);
+        $self->requireLanguagePackage($package . "_Custom");
+        $first = 0;
     }
 
     # set the translation helper
     $self->{language}->{TranslationHelper} = $self;
+}
+
+#---------------------------------------------------------------------------------------------------------
+# requireLanguagePackage()
+#
+# Loads and initializes a language package, optionally storing the file name of the first package loaded.
+#
+#     $Self->requireLanguagePackage($package, $first);
+#
+# Parameters:
+#     $package: The name of the language package to load, in the form of 'Kernel::Language::PackageName'.
+#     $first (optional): A flag to indicate if this is the first package loaded. If true, the file name
+#                        of the first loaded package will be stored.
+#
+# Returns:
+#     None.
+#
+# Example:
+#     $Self->requireLanguagePackage('Kernel::Language::YourPackage', 1);
+#
+# Note:
+#     1. This function attempts to load the specified language package by converting the package name
+#        into a file path and using Perl's 'require' function.
+#     2. If the 'require' operation fails (e.g., package not found), it will catch the error and return
+#        without raising an exception.
+#     3. It checks if the loaded package has a 'Data' method and applies it if available.
+#     4. The file name of the first loaded package can be stored if the '$first' flag is set to true.
+#---------------------------------------------------------------------------------------------------------
+sub requireLanguagePackage {
+    my ($self, $package, $init) = @_;
+
+    # return if we do not have a package
+    return unless $package;
+
+    # store the first package and store its default file name
+    if ($init) {
+        $self->{package} = $package;
+        my $file = $package =~ s{::}{/}smxgr;
+        $self->{file} = $self->{home} . $file . '.pm';
+    }
+
+    # we do not use Main::Require() here, because we want to catch the error
+    my $file = $package =~ s{::}{/}smxgr;
+    $file = $file . '.pm';
+    eval { require $file; };
+
+    return if $@;
+
+    # replace the file name with the real one
+    $self->{file} = $INC{$file} if $init;
+
+    # return if the package does not have a Data method
+    my $dataMethod = $package->can('Data');
+    return unless $dataMethod;
+    
+    # apply package translation
+    eval { $dataMethod->($self) };
 }
 
 #---------------------------------------------------------------------------------------------------------
@@ -186,6 +218,12 @@ sub checkTranslation {
     my ( $self, $text ) = @_;
     return if !$text;
 
+    # return if we do not have a package
+    my $package = $self->{package};
+    return unless $package;
+        
+    my $file = $self->{file};
+
     # return if the text is already translated
     return if $self->{Translation}->{$text};
 
@@ -193,10 +231,7 @@ sub checkTranslation {
     if ($self->{exclude}) {
         return if grep { $text =~ /$_/ } @{$self->{exclude}};
     }
-    my $pckg = $self->{packages}[0];
-    my $package = $pckg->{package};
-    my $file = $pckg->{file};
-
+    
     $self->getLines($package, $file) unless $self->{lines};
 
     $text = '        # \'' . $text . '\' => \'' . $text . '\'';
@@ -237,13 +272,11 @@ sub getLines {
     my $startMarker = '# $$ START TranslationHelper $$';
     my $endMarker = '# $$ END TranslationHelper $$';
 
-    # if the file does not exist, create it
-    if (! -f $file) {
-        $self->createLanguageModule($package, $file);
-        $self->{lines} = [];
-    } else {
-        $self->readLinesBetweenMarkers( $file, $startMarker, $endMarker );
-    }
+    # does not do anything if the file exists
+    $self->createLanguageModule($package, $file);
+    
+    # read the TranslationHelper section
+    $self->readLinesBetweenMarkers( $file, $startMarker, $endMarker );
 }
 
 #---------------------------------------------------------------------------------------------------------
@@ -399,11 +432,11 @@ sub replaceLinesBetweenMarkers {
     my $insideSection = 0;
     my @newFileContent;
     # append \n to each new line
-    @$newLines = map { $_ =~ /\n$/ ? $_ : "$_\n" } @$newLines;
+    my @newLines = map { $_ =~ /\n$/ ? $_ : "$_\n" } @$newLines;
     foreach my $line (@lines) {
         if ($line =~ /#\s*\$\$ START TranslationHelper \$\$/) {
             $insideSection = 1;
-            push @newFileContent, $line, @$newLines;
+            push @newFileContent, $line, @newLines;
             next;
         }
         if ($line =~ /#\s*\$\$ END TranslationHelper \$\$/) {
@@ -445,11 +478,13 @@ sub replaceLinesBetweenMarkers {
 sub createLanguageModule {
     my ($self, $package, $file) = @_;
 
+    # Return if the file already exists
+    return if (-e $file);
+
     # Convert package name to file path
     my $dir = dirname($file);
 
-    # Check if the file already exists
-    return if (-e $file);
+    $self->{lines} = [];
 
     # Create directory if it does not exist
     mkdir $dir or die "Could not create directory $dir: $!" unless -d $dir;
@@ -486,13 +521,10 @@ END_OF_FILE
     close $fh;
 }
 
-sub dump {}
-
-# sub dump {
-#     my $self = shift;
-#     my $dumper = $self->{dumper} ||= $Kernel::OM->Get('MFO::Log::Dumper');
-#     my ( $self, $tag, $data ) = @_;
-#     $self->{dumper}->dump($tag, $data, 1);
-# }
+sub dump {
+    # my ( $self, $tag, $data ) = @_;
+    # my $dumper = $self->{dumper} ||= $Kernel::OM->Get('MFO::Log::Dumper');
+    # $self->{dumper}->dump($tag, $data, 1);
+}
 
 1;
