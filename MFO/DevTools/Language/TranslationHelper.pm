@@ -227,6 +227,9 @@ sub checkTranslation {
     
     $self->getLines($package, $file) unless $self->{lines};
 
+    # escape ' and \ characters
+    $text =~ s/([\\'])/\\$1/g;
+
     $text = '        # \'' . $text . '\' => \'' . $text . '\',';
 
     if (! grep { $_ eq $text } @{$self->{lines}}) {
